@@ -45,7 +45,7 @@ Con esos "códigos", definí 6 segmentos estratégicos. En lugar de crear reglas
 (Una expresión regular o "Regex" es simplemente un "mini-lenguaje" usado para buscar patrones en el texto. Por ejemplo, el patrón ^[3-4] significa "el texto debe empezar con un '3' o un '4'", permitiéndonos agrupar códigos similares).
 
 a. Clientes VIP: (Patrón Regex: ^[3-4][3-4][3-4]$)
- Los mejores en todo. Clientes que puntuaron alto (3 o 4) en Recencia, Frecuencia Y Gasto. Son la "joya" del negocio.
+ Los mejores en todo. Clientes que puntuaron alto (3 o 4) en Recencia, Frecuencia y Gasto. Son la "joya" del negocio.
 
 b. Clientes en Riesgo: (Patrón Regex: ^[1-2][3-4][3-4]$)
  Clientes que eran VIPs. Puntuaron alto (3 o 4) en Frecuencia y Gasto, pero su puntaje de Recencia es bajo (1 o 2). Gastaban mucho y seguido, pero hace mucho no vuelven. ¡Son la "bomba de tiempo"!
