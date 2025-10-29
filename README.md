@@ -19,6 +19,49 @@ En lugar de ver a los clientes como una gran masa, este modelo los califica indi
   -Monetario (M): ¿Cuánto dinero ha gastado en total?
 El proceso técnico fue un trabajo de análisis de datos usando Python, principalmente con las librerías Pandas, Matplotlib y Seaborn.
 
+El Sistema de Puntuación (Scoring): Primero, no se puede comparar directamente "10 días" con "10 compras". Necesitaba un sistema de calificación universal. Para esto, usé una técnica de cuartiles. Tomé a todos los clientes y los dividí en 4 grupos iguales para cada una de las 3 métricas (R, F y M). Luego, les asigné un puntaje del 1 al 4.
+
+Puntaje 4 = El mejor 25%
+
+Puntaje 3 = El siguiente 25%
+
+Puntaje 2 = El siguiente 25%
+
+Puntaje 1 = El peor 25%
+
+La clave del modelo se aplicó así:
+
+Puntaje R (Recencia): 4 = El más reciente (mejor), 1 = El más antiguo (peor). (Nota: Esto se logra invirtiendo la escala, ya que un valor numérico más bajo de días es mejor).
+
+Puntaje F (Frecuencia): 4 = El más frecuente (mejor), 1 = El menos frecuente (peor).
+
+Puntaje M (Monetario): 4 = El que más gastó (mejor), 1 = El que menos gastó (peor).
+
+Al final de este paso, cada cliente tenía un "código" de 3 dígitos (ej. "444", "121", "412").
+
+La Lógica de Negocio para cada Segmento
+
+Con esos "códigos", definí 6 segmentos estratégicos. En lugar de crear reglas para las 64 combinaciones posibles (4x4x4), usé patrones (expresiones regulares o Regex) para agrupar los perfiles lógicos:
+(Una expresión regular o "Regex" es simplemente un "mini-lenguaje" usado para buscar patrones en el texto. Por ejemplo, el patrón ^[3-4] significa "el texto debe empezar con un '3' o un '4'", permitiéndonos agrupar códigos similares).
+
+a. Clientes VIP: (Patrón Regex: ^[3-4][3-4][3-4]$)
+ Los mejores en todo. Clientes que puntuaron alto (3 o 4) en Recencia, Frecuencia Y Gasto. Son la "joya" del negocio.
+
+b. Clientes en Riesgo: (Patrón Regex: ^[1-2][3-4][3-4]$)
+ Clientes que eran VIPs. Puntuaron alto (3 o 4) en Frecuencia y Gasto, pero su puntaje de Recencia es bajo (1 o 2). Gastaban mucho y seguido, pero hace mucho no vuelven. ¡Son la "bomba de tiempo"!
+
+c. Clientes Nuevos: (Patrón Regex: ^[3-4]1[1-2]$)
+ Los que acaban de llegar. Tienen un puntaje de Recencia alto (3 o 4), pero su Frecuencia es la peor (1) y su Gasto es bajo (1 o 2). Son los "One-and-Done" que hay que fidelizar.
+
+d. Clientes Perdidos: (Patrón Regex: ^[1-2]11$)
+ Los peores clientes. Puntuación baja en casi todo. Recencia baja (1 o 2), Frecuencia (1) y Gasto (1).
+
+e. Clientes Promedio: (Patrón Regex: ^[2-3][2-3][2-3]$)
+ Los que están "en el medio". Sus puntajes son moderados (2 o 3) en las tres categorías. Son la "panza" del negocio, que hay que cultivar para moverlos a VIP.
+
+f. Otros:
+  Este es el "cajón de sastre". Incluye a todos los clientes con combinaciones mixtas (ej. '421' - compró hace poco, pero ni seguido ni mucho) que no cayeron en las 5 reglas principales. El gran tamaño de este grupo justifica una "Fase 2" de este proyecto, donde se podrían aplicar técnicas de clustering (como K-Means) para descubrir sub-segmentos ocultos en él.
+
 ---
 
 ## 3. Hallazgos Clave: El Dashboard 📈
